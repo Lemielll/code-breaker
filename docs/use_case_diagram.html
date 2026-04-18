@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Code Breaker — Use Case Diagram (Interactive SVG)</title>
+<style>
+  body{margin:0;background:#0f1117;font-family:'Segoe UI',sans-serif;display:flex;justify-content:center;padding:20px}
+  .legend{position:fixed;top:20px;right:20px;background:#1a1d27;border:1px solid #2d3148;border-radius:8px;padding:14px;color:#c9d1d9;font-size:12px;z-index:10}
+  .legend h4{margin:0 0 8px;color:#58a6ff}
+  .legend-item{display:flex;align-items:center;margin:3px 0}
+  .legend-color{width:12px;height:12px;border-radius:3px;margin-right:7px}
+  #tooltip{position:fixed;background:#1e2130;color:#e6edf3;border:1px solid #58a6ff;border-radius:6px;padding:10px 14px;font-size:12px;max-width:280px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,.5)}
+  #tooltip .t{font-weight:700;color:#58a6ff;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div class="legend">
+  <h4>Legend</h4>
+  <div class="legend-item"><div class="legend-color" style="background:#3fb950"></div>Guest Player</div>
+  <div class="legend-item"><div class="legend-color" style="background:#58a6ff"></div>Registered Player</div>
+  <div class="legend-item"><div class="legend-color" style="background:#f0883e"></div>Admin</div>
+  <div class="legend-item"><div class="legend-color" style="background:#f85149"></div>Security UC</div>
+  <div class="legend-item"><div class="legend-color" style="background:none;border:1px dashed #8b949e"></div>«include»</div>
+</div>
+<div id="tooltip"><div class="t"></div><div class="b"></div></div>
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 850" width="1100" height="850">
+  <defs>
+    <filter id="g1"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#3fb950" flood-opacity=".5"/></filter>
+    <filter id="g2"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#58a6ff" flood-opacity=".5"/></filter>
+    <filter id="g3"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#f0883e" flood-opacity=".5"/></filter>
+  </defs>
+
+  <!-- System Boundary -->
+  <rect x="170" y="25" width="780" height="800" rx="14" fill="none" stroke="#30363d" stroke-width="2" stroke-dasharray="8,4"/>
+  <text x="560" y="58" text-anchor="middle" fill="#8b949e" font-size="16" font-weight="700">Code Breaker System</text>
+
+  <!-- === ACTORS === -->
+  <!-- Guest -->
+  <g class="a" data-tip="Guest Player|Pemain anonim. Masukkan nickname, skor tidak persisten." transform="translate(65,250)">
+    <circle cx="0" cy="-18" r="14" fill="none" stroke="#3fb950" stroke-width="2.5" filter="url(#g1)"/>
+    <line x1="0" y1="-4" x2="0" y2="26" stroke="#3fb950" stroke-width="2.5"/>
+    <line x1="-18" y1="8" x2="18" y2="8" stroke="#3fb950" stroke-width="2.5"/>
+    <line x1="0" y1="26" x2="-13" y2="46" stroke="#3fb950" stroke-width="2.5"/>
+    <line x1="0" y1="26" x2="13" y2="46" stroke="#3fb950" stroke-width="2.5"/>
+    <text x="0" y="64" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">Guest Player</text>
+  </g>
+  <!-- Registered -->
+  <g class="a" data-tip="Registered Player|Terdaftar (username+password). Skor, progres, streak tersimpan." transform="translate(65,520)">
+    <circle cx="0" cy="-18" r="14" fill="none" stroke="#58a6ff" stroke-width="2.5" filter="url(#g2)"/>
+    <line x1="0" y1="-4" x2="0" y2="26" stroke="#58a6ff" stroke-width="2.5"/>
+    <line x1="-18" y1="8" x2="18" y2="8" stroke="#58a6ff" stroke-width="2.5"/>
+    <line x1="0" y1="26" x2="-13" y2="46" stroke="#58a6ff" stroke-width="2.5"/>
+    <line x1="0" y1="26" x2="13" y2="46" stroke="#58a6ff" stroke-width="2.5"/>
+    <text x="0" y="64" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="600">Registered Player</text>
+  </g>
+  <!-- Admin -->
+  <g class="a" data-tip="Admin|Pengelola puzzle Cipher Crack. Akun via seed." transform="translate(1045,400)">
+    <circle cx="0" cy="-18" r="14" fill="none" stroke="#f0883e" stroke-width="2.5" filter="url(#g3)"/>
+    <line x1="0" y1="-4" x2="0" y2="26" stroke="#f0883e" stroke-width="2.5"/>
+    <line x1="-18" y1="8" x2="18" y2="8" stroke="#f0883e" stroke-width="2.5"/>
+    <line x1="0" y1="26" x2="-13" y2="46" stroke="#f0883e" stroke-width="2.5"/>
+    <line x1="0" y1="26" x2="13" y2="46" stroke="#f0883e" stroke-width="2.5"/>
+    <text x="0" y="64" text-anchor="middle" fill="#f0883e" font-size="11" font-weight="600">Admin</text>
+  </g>
+
+  <!-- === USE CASES === -->
+  <!-- Auth UCs -->
+  <g class="u" data-tip="UC-01: Enter Nickname|Guest masukkan nickname 3-16 alfanumerik → session token sementara.">
+    <ellipse cx="300" cy="110" rx="95" ry="26" fill="#162b1a" stroke="#3fb950" stroke-width="1.5"/>
+    <text x="300" y="114" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">UC-01: Enter Nickname</text>
+  </g>
+  <g class="u" data-tip="UC-02: Register|Username(unik)+password(min8)+nickname → UID UUIDv4 auto-gen.">
+    <ellipse cx="300" cy="510" rx="85" ry="26" fill="#0d1b30" stroke="#58a6ff" stroke-width="1.5"/>
+    <text x="300" y="514" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="600">UC-02: Register</text>
+  </g>
+  <g class="u" data-tip="UC-03: Login|Username+password → JWT access+refresh token.">
+    <ellipse cx="300" cy="575" rx="85" ry="26" fill="#0d1b30" stroke="#58a6ff" stroke-width="1.5"/>
+    <text x="300" y="579" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="600">UC-03: Login</text>
+  </g>
+  <g class="u" data-tip="UC-04: Logout|Invalidasi token. Kembali ke landing page.">
+    <ellipse cx="300" cy="640" rx="85" ry="26" fill="#0d1b30" stroke="#58a6ff" stroke-width="1.5"/>
+    <text x="300" y="644" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="600">UC-04: Logout</text>
+  </g>
+  <g class="u" data-tip="UC-05: Update Profile|Ubah nickname dan/atau password.">
+    <ellipse cx="300" cy="705" rx="85" ry="26" fill="#0d1b30" stroke="#58a6ff" stroke-width="1.5"/>
+    <text x="300" y="709" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="600">UC-05: Update Profile</text>
+  </g>
+
+  <!-- Game UCs -->
+  <g class="u" data-tip="UC-06: Play Classic|Tebak hex 4-digit acak. Maks 8 percobaan. Feedback: 🟢🟡⚫.">
+    <ellipse cx="510" cy="180" rx="105" ry="26" fill="#162b1a" stroke="#3fb950" stroke-width="1.5"/>
+    <text x="510" y="184" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">UC-06: Play Classic Mode</text>
+  </g>
+  <g class="u" data-tip="UC-07: Daily Challenge|1 puzzle/hari, seed deterministik. Registered: 1x/hari.">
+    <ellipse cx="510" cy="250" rx="108" ry="26" fill="#162b1a" stroke="#3fb950" stroke-width="1.5"/>
+    <text x="510" y="254" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">UC-07: Play Daily Challenge</text>
+  </g>
+  <g class="u" data-tip="UC-08: Cipher Crack|Decode hex Caesar cipher. Maks 6 percobaan. Hint -50% skor.">
+    <ellipse cx="510" cy="320" rx="108" ry="26" fill="#162b1a" stroke="#3fb950" stroke-width="1.5"/>
+    <text x="510" y="324" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">UC-08: Play Cipher Crack</text>
+  </g>
+  <g class="u" data-tip="UC-09: Submit Guess|Input 4 hex chars → server validate → feedback array.">
+    <ellipse cx="730" cy="250" rx="92" ry="26" fill="#162b1a" stroke="#3fb950" stroke-width="1.5"/>
+    <text x="730" y="254" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">UC-09: Submit Guess</text>
+  </g>
+
+  <!-- Info UCs -->
+  <g class="u" data-tip="UC-10: View Leaderboard|Top 50 per mode. Guest bisa lihat, skor tidak masuk.">
+    <ellipse cx="510" cy="400" rx="100" ry="26" fill="#162b1a" stroke="#3fb950" stroke-width="1.5"/>
+    <text x="510" y="404" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">UC-10: View Leaderboard</text>
+  </g>
+  <g class="u" data-tip="UC-11: View Progress|Level, XP, Streak, Stats per mode.">
+    <ellipse cx="510" cy="580" rx="100" ry="26" fill="#0d1b30" stroke="#58a6ff" stroke-width="1.5"/>
+    <text x="510" y="584" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="600">UC-11: View Progress</text>
+  </g>
+  <g class="u" data-tip="UC-12: View Achievements|10 badges, locked/unlocked status.">
+    <ellipse cx="510" cy="650" rx="100" ry="26" fill="#0d1b30" stroke="#58a6ff" stroke-width="1.5"/>
+    <text x="510" y="654" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="600">UC-12: View Achievements</text>
+  </g>
+
+  <!-- Admin UCs -->
+  <g class="u" data-tip="UC-13: Manage Puzzles|CRUD Cipher Crack. Status: Draft→Published→Archived.">
+    <ellipse cx="830" cy="380" rx="108" ry="26" fill="#2b1d11" stroke="#f0883e" stroke-width="1.5"/>
+    <text x="830" y="384" text-anchor="middle" fill="#f0883e" font-size="11" font-weight="600">UC-13: Manage Puzzles</text>
+  </g>
+  <g class="u" data-tip="UC-14: View Dashboard|Jumlah puzzle, pemain, game hari ini.">
+    <ellipse cx="830" cy="450" rx="108" ry="26" fill="#2b1d11" stroke="#f0883e" stroke-width="1.5"/>
+    <text x="830" y="454" text-anchor="middle" fill="#f0883e" font-size="11" font-weight="600">UC-14: View Dashboard</text>
+  </g>
+
+  <!-- Security UCs -->
+  <g class="u" data-tip="UC-S01: Validate Input|Sanitize semua input. Regex, length, charset. OWASP A03.">
+    <ellipse cx="730" cy="115" rx="88" ry="22" fill="#2b1111" stroke="#f85149" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="730" y="119" text-anchor="middle" fill="#f85149" font-size="10" font-weight="600">UC-S01: Validate Input</text>
+  </g>
+  <g class="u" data-tip="UC-S02: Authenticate|Verify JWT, check expiry. OWASP A07.">
+    <ellipse cx="510" cy="780" rx="88" ry="22" fill="#2b1111" stroke="#f85149" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="510" y="784" text-anchor="middle" fill="#f85149" font-size="10" font-weight="600">UC-S02: Authenticate</text>
+  </g>
+  <g class="u" data-tip="UC-S03: Authorize RBAC|Check role admin. OWASP A01.">
+    <ellipse cx="830" cy="530" rx="88" ry="22" fill="#2b1111" stroke="#f85149" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="830" y="534" text-anchor="middle" fill="#f85149" font-size="10" font-weight="600">UC-S03: Authorize RBAC</text>
+  </g>
+  <g class="u" data-tip="UC-S06: Generate Code|crypto.randomBytes server-side. Kode TIDAK ke client.">
+    <ellipse cx="730" cy="340" rx="88" ry="22" fill="#2b1111" stroke="#f85149" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="730" y="344" text-anchor="middle" fill="#f85149" font-size="10" font-weight="600">UC-S06: Generate Code</text>
+  </g>
+
+  <!-- === ASSOCIATIONS === -->
+  <!-- Guest → UCs -->
+  <line x1="95" y1="240" x2="205" y2="115" stroke="#3fb950" stroke-width="1.2" opacity=".5"/>
+  <line x1="95" y1="250" x2="405" y2="185" stroke="#3fb950" stroke-width="1.2" opacity=".5"/>
+  <line x1="95" y1="260" x2="402" y2="250" stroke="#3fb950" stroke-width="1.2" opacity=".5"/>
+  <line x1="95" y1="270" x2="402" y2="320" stroke="#3fb950" stroke-width="1.2" opacity=".5"/>
+  <line x1="95" y1="280" x2="410" y2="400" stroke="#3fb950" stroke-width="1.2" opacity=".5"/>
+  <!-- Registered → UCs -->
+  <line x1="95" y1="505" x2="215" y2="510" stroke="#58a6ff" stroke-width="1.2" opacity=".5"/>
+  <line x1="95" y1="515" x2="215" y2="575" stroke="#58a6ff" stroke-width="1.2" opacity=".5"/>
+  <line x1="95" y1="525" x2="215" y2="640" stroke="#58a6ff" stroke-width="1.2" opacity=".5"/>
+  <line x1="95" y1="535" x2="215" y2="705" stroke="#58a6ff" stroke-width="1.2" opacity=".5"/>
+  <line x1="95" y1="510" x2="410" y2="580" stroke="#58a6ff" stroke-width="1.2" opacity=".5"/>
+  <line x1="95" y1="520" x2="410" y2="650" stroke="#58a6ff" stroke-width="1.2" opacity=".5"/>
+  <line x1="95" y1="495" x2="405" y2="185" stroke="#58a6ff" stroke-width="1" opacity=".3" stroke-dasharray="4,3"/>
+  <line x1="95" y1="500" x2="402" y2="250" stroke="#58a6ff" stroke-width="1" opacity=".3" stroke-dasharray="4,3"/>
+  <line x1="95" y1="505" x2="402" y2="320" stroke="#58a6ff" stroke-width="1" opacity=".3" stroke-dasharray="4,3"/>
+  <!-- Admin → UCs -->
+  <line x1="1015" y1="390" x2="938" y2="380" stroke="#f0883e" stroke-width="1.2" opacity=".5"/>
+  <line x1="1015" y1="410" x2="938" y2="450" stroke="#f0883e" stroke-width="1.2" opacity=".5"/>
+  <line x1="1015" y1="400" x2="385" y2="575" stroke="#f0883e" stroke-width="1" opacity=".3" stroke-dasharray="4,3"/>
+
+  <!-- Include relationships -->
+  <line x1="615" y1="185" x2="638" y2="242" stroke="#8b949e" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="640" y="210" fill="#8b949e" font-size="8" font-style="italic">«include»</text>
+  <line x1="618" y1="250" x2="638" y2="250" stroke="#8b949e" stroke-width="1" stroke-dasharray="5,3"/>
+  <line x1="618" y1="315" x2="638" y2="260" stroke="#8b949e" stroke-width="1" stroke-dasharray="5,3"/>
+  <line x1="730" y1="224" x2="730" y2="137" stroke="#8b949e" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="738" y="180" fill="#8b949e" font-size="8" font-style="italic">«include»</text>
+  <line x1="615" y1="195" x2="645" y2="330" stroke="#8b949e" stroke-width="1" stroke-dasharray="5,3"/>
+  <line x1="830" y1="406" x2="830" y2="508" stroke="#8b949e" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="838" y="470" fill="#8b949e" font-size="8" font-style="italic">«include»</text>
+  <line x1="385" y1="585" x2="422" y2="775" stroke="#8b949e" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="415" y="700" fill="#8b949e" font-size="8" font-style="italic">«include»</text>
+</svg>
+
+<script>
+const tt=document.getElementById('tooltip'),t1=tt.querySelector('.t'),t2=tt.querySelector('.b');
+document.querySelectorAll('[data-tip]').forEach(el=>{
+  el.style.cursor='pointer';
+  el.addEventListener('mouseenter',e=>{const[a,b]=el.dataset.tip.split('|');t1.textContent=a;t2.textContent=b||'';tt.style.opacity='1';
+    el.querySelectorAll('ellipse').forEach(x=>{x.setAttribute('stroke-width','3');x.style.filter='brightness(1.3)'})});
+  el.addEventListener('mousemove',e=>{tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY+14)+'px'});
+  el.addEventListener('mouseleave',()=>{tt.style.opacity='0';
+    el.querySelectorAll('ellipse').forEach(x=>{x.setAttribute('stroke-width','1.5');x.style.filter=''})});
+});
+</script>
+</body>
+</html>
