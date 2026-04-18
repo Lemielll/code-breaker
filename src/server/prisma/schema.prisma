@@ -1,0 +1,141 @@
+// Prisma Schema — Code Breaker
+// 7 tables sesuai Database Design Document
+// Using SQLite for local development
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(uuid())
+  username        String   @unique
+  passwordHash    String   @map("password_hash")
+  nickname        String
+  role            String   @default("player")
+  totalXp         Int      @default(0) @map("total_xp")
+  level           Int      @default(1)
+  currentStreak   Int      @default(0) @map("current_streak")
+  longestStreak   Int      @default(0) @map("longest_streak")
+  lastPlayedDate  String?  @map("last_played_date")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+
+  gameSessions    GameSession[]
+  achievements    UserAchievement[]
+  stats           UserStats?
+  createdPuzzles  CipherPuzzle[]
+
+  @@map("users")
+}
+
+model GameSession {
+  id               String    @id @default(uuid())
+  userId           String?   @map("user_id")
+  guestNickname    String?   @map("guest_nickname")
+  mode             String
+  secretCode       String    @map("secret_code")
+  status           String    @default("in_progress")
+  score            Int       @default(0)
+  maxAttempts      Int       @map("max_attempts")
+  attemptsUsed     Int       @default(0) @map("attempts_used")
+  hintsUsed        Int       @default(0) @map("hints_used")
+  cipherPuzzleId   String?   @map("cipher_puzzle_id")
+  dailyChallengeId String?   @map("daily_challenge_id")
+  startedAt        DateTime  @default(now()) @map("started_at")
+  completedAt      DateTime? @map("completed_at")
+
+  user            User?           @relation(fields: [userId], references: [id])
+  guesses         Guess[]
+  cipherPuzzle    CipherPuzzle?   @relation(fields: [cipherPuzzleId], references: [id])
+  dailyChallenge  DailyChallenge? @relation(fields: [dailyChallengeId], references: [id])
+
+  @@index([userId])
+  @@index([mode, score])
+  @@index([userId, dailyChallengeId])
+  @@map("game_sessions")
+}
+
+model Guess {
+  id            String   @id @default(uuid())
+  sessionId     String   @map("session_id")
+  attemptNumber Int      @map("attempt_number")
+  guessValue    String   @map("guess_value")
+  feedbackJson  String   @map("feedback_json")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  session       GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, attemptNumber])
+  @@index([sessionId])
+  @@map("guesses")
+}
+
+model DailyChallenge {
+  id            String   @id @default(uuid())
+  challengeDate String   @unique @map("challenge_date")
+  secretCode    String   @map("secret_code")
+  seed          String
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  gameSessions  GameSession[]
+
+  @@map("daily_challenges")
+}
+
+model CipherPuzzle {
+  id           String   @id @default(uuid())
+  title        String
+  plaintext    String
+  ciphertext   String
+  cipherMethod String   @default("caesar_hex") @map("cipher_method")
+  shiftValue   Int      @map("shift_value")
+  hint         String?
+  status       String   @default("draft")
+  createdBy    String   @map("created_by")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  creator      User          @relation(fields: [createdBy], references: [id])
+  gameSessions GameSession[]
+
+  @@index([status])
+  @@map("cipher_puzzles")
+}
+
+model UserAchievement {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  badgeId    String   @map("badge_id")
+  unlockedAt DateTime @default(now()) @map("unlocked_at")
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+  @@map("user_achievements")
+}
+
+model UserStats {
+  userId             String @id @map("user_id")
+  classicGamesPlayed Int    @default(0) @map("classic_games_played")
+  classicGamesWon    Int    @default(0) @map("classic_games_won")
+  classicBestScore   Int    @default(0) @map("classic_best_score")
+  dailyGamesPlayed   Int    @default(0) @map("daily_games_played")
+  dailyGamesWon      Int    @default(0) @map("daily_games_won")
+  dailyBestScore     Int    @default(0) @map("daily_best_score")
+  cipherGamesPlayed  Int    @default(0) @map("cipher_games_played")
+  cipherGamesWon     Int    @default(0) @map("cipher_games_won")
+  cipherBestScore    Int    @default(0) @map("cipher_best_score")
+  totalGamesPlayed   Int    @default(0) @map("total_games_played")
+  totalGamesWon      Int    @default(0) @map("total_games_won")
+  updatedAt          DateTime @default(now()) @updatedAt @map("updated_at")
+
+  user               User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_stats")
+}
